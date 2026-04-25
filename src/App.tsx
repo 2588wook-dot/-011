@@ -167,63 +167,69 @@ const Footer = () => {
 
 const Home = ({ heroBg }: { heroBg: string }) => (
   <main className="pt-24 min-h-screen">
-    <header className="bg-[#0a1d37] border-b border-white/5 overflow-hidden border-t-8 border-primary-red">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-stretch">
-        {/* Text Area */}
-        <div className="flex-1 flex items-center px-6 md:px-10 py-16 md:py-0 order-2 md:order-1">
+    <header className="bg-[#0a1d37] overflow-hidden border-t-8 border-primary-red">
+      <div className="max-w-7xl mx-auto flex flex-col items-center">
+        {/* New Top Image Area */}
+        <div className="w-full flex justify-center bg-[#0a1d37] pt-8 md:pt-12 px-4 relative">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            className="relative z-20 w-full flex justify-center"
+          >
+            <img 
+              src={heroBg} 
+              alt="후보자 김상동" 
+              referrerPolicy="no-referrer"
+              loading="eager"
+              className="w-full max-w-lg md:max-w-2xl h-auto max-h-[400px] md:max-h-[600px] object-contain shadow-2xl rounded-2xl"
+              onError={() => {
+                console.error('Failed to load hero image');
+              }}
+            />
+            {/* Glossy overlay effect for the image */}
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-white/10 to-transparent pointer-events-none" />
+          </motion.div>
+          {/* Background flourish */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-full bg-primary-red/10 blur-[120px] rounded-full pointer-events-none" />
+        </div>
+
+        {/* Text Area Below Image */}
+        <div className="w-full flex flex-col items-center px-6 md:px-10 py-12 md:py-20 text-center">
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="max-w-2xl text-center md:text-left w-full"
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.8 }}
+            className="max-w-3xl w-full"
           >
-            <div className="h-4 w-32 bg-primary-red mb-10 mx-auto md:mx-0" />
-            <h1 className="text-white font-bold mb-8 leading-[1.1]">
-              <span className="text-xl md:text-3xl lg:text-4xl block mb-4 font-normal text-white/70">경상북도 교육감 예비후보</span>
-              <span className="text-5xl md:text-7xl lg:text-9xl">김상동</span>
+            <div className="h-1.5 w-24 bg-primary-red mb-8 mx-auto" />
+            <h1 className="text-white font-bold mb-8 leading-tight">
+              <span className="text-lg md:text-2xl lg:text-3xl block mb-4 font-normal text-white/70 tracking-widest uppercase">경상북도 교육감 예비후보</span>
+              <span className="text-5xl md:text-8xl lg:text-9xl tracking-tighter">김상동</span>
             </h1>
-            <p className="text-lg md:text-2xl text-white/80 leading-relaxed max-w-sm mb-10 font-medium mx-auto md:mx-0">
-              전 경북대학교 총장의 <br/>검증된 실무와 행정력
+            <p className="text-lg md:text-2xl text-white/90 leading-relaxed mb-12 font-medium">
+              전 경북대학교 총장의 <br/>검증된 실무와 행정력으로 <br className="md:hidden" />경북교육의 미래를 엽니다.
             </p>
-            <div className="flex flex-col gap-4 max-w-sm mx-auto md:mx-0">
-              <Link to="/pledges" className="bg-primary-red text-white px-8 py-5 font-black text-xl md:text-2xl uppercase tracking-widest hover:bg-white hover:text-primary-red transition-all flex items-center justify-between group shadow-2xl">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Link to="/pledges" className="w-full sm:w-auto bg-primary-red text-white px-10 py-5 font-black text-xl md:text-2xl uppercase tracking-widest hover:bg-white hover:text-primary-red transition-all flex items-center justify-center gap-4 group shadow-xl">
                 공약 바로보기 <ArrowRight size={24} className="group-hover:translate-x-1 transition-transform" />
               </Link>
-              
-              <div className="grid grid-cols-2 gap-3 mt-2">
-                <Link to="/academic" className="bg-white/10 border border-white/20 text-white px-4 py-4 font-bold text-sm hover:bg-white/20 transition-all flex items-center justify-between">
-                  후보자 학력 <ArrowRight size={14} className="text-primary-red" />
-                </Link>
-                <Link to="/career" className="bg-white/10 border border-white/20 text-white px-4 py-4 font-bold text-sm hover:bg-white/20 transition-all flex items-center justify-between">
-                  후보자 경력 <ArrowRight size={14} className="text-primary-red" />
-                </Link>
-              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4 mt-8 max-w-lg mx-auto">
+              <Link to="/academic" className="bg-white/10 border border-white/20 text-white px-4 py-6 font-bold text-sm hover:bg-white/20 transition-all flex flex-col items-center gap-3">
+                <span className="text-white/60 text-[10px] uppercase tracking-widest font-black">About Education</span>
+                <span className="flex items-center gap-2">후보자 학력 <ArrowRight size={14} className="text-primary-red" /></span>
+              </Link>
+              <Link to="/career" className="bg-white/10 border border-white/20 text-white px-4 py-6 font-bold text-sm hover:bg-white/20 transition-all flex flex-col items-center gap-3">
+                <span className="text-white/60 text-[10px] uppercase tracking-widest font-black">Experience</span>
+                <span className="flex items-center gap-2">후보자 경력 <ArrowRight size={14} className="text-primary-red" /></span>
+              </Link>
             </div>
           </motion.div>
         </div>
-
-        {/* Image Area */}
-        <div className="flex-1 flex justify-center md:justify-end items-end order-1 md:order-2 overflow-hidden bg-[#0a1d37] relative min-h-[40vh] md:min-h-0">
-          <motion.img 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            src={heroBg} 
-            alt="후보자 김상동" 
-            referrerPolicy="no-referrer"
-            loading="eager"
-            className="w-full max-w-full md:w-auto h-[400px] sm:h-[500px] md:h-[85vh] lg:h-[90vh] object-contain object-bottom relative z-20"
-            onLoad={() => console.log('Hero image loaded')}
-            onError={() => {
-              console.error('Failed to load hero image, reverting to default');
-              setHeroBg('https://artifact.mshcdn.com/posts/abs-327702811/artifact_image_1745583858_328.png');
-            }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0a1d37]/40 to-transparent z-10 md:hidden" />
-        </div>
       </div>
     </header>
-
   </main>
 );
 
