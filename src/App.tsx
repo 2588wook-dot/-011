@@ -389,6 +389,7 @@ export default function App() {
   const [password, setPassword] = useState('');
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [heroBg, setHeroBg] = useState('https://artifact.mshcdn.com/posts/abs-327702811/artifact_image_1745583858_328.png');
+  const [tempHeroBg, setTempHeroBg] = useState<string | null>(null);
   const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [newAchievement, setNewAchievement] = useState<Partial<Achievement>>({});
 
@@ -414,6 +415,8 @@ export default function App() {
   const saveHeroBg = (url: string) => {
     setHeroBg(url);
     localStorage.setItem('edu_hero_bg_ksd', url);
+    setTempHeroBg(null);
+    alert('메인 배경 이미지가 성공적으로 저장되었습니다.');
   };
 
   const handleAdminAuth = (e: React.FormEvent) => {
@@ -508,12 +511,21 @@ export default function App() {
                         <div>
                           <label className="text-[10px] uppercase font-bold text-slate-400 block mb-2">메인 배경 이미지</label>
                           <div className="flex flex-col gap-3">
-                            {heroBg && (
-                              <div className="w-full h-32 bg-slate-200 overflow-hidden border border-slate-200">
-                                <img src={heroBg} alt="Preview" referrerPolicy="no-referrer" className="w-full h-full object-cover" />
-                              </div>
-                            )}
-                            <div className="flex gap-2">
+                            <div className="w-full h-40 bg-slate-200 overflow-hidden border border-slate-200 relative group">
+                              <img 
+                                src={tempHeroBg || heroBg} 
+                                alt="Preview" 
+                                referrerPolicy="no-referrer" 
+                                className={`w-full h-full object-cover ${tempHeroBg ? 'opacity-50' : ''}`} 
+                              />
+                              {tempHeroBg && (
+                                <div className="absolute inset-0 flex items-center justify-center bg-black/20 text-white font-bold text-xs">
+                                  미리보기 중 (저장 필요)
+                                </div>
+                              )}
+                            </div>
+                            
+                            <div className="grid grid-cols-2 gap-2">
                               <input 
                                 id="hero-upload"
                                 type="file" 
@@ -525,7 +537,7 @@ export default function App() {
                                     const reader = new FileReader();
                                     reader.onloadend = () => {
                                       const base64String = reader.result as string;
-                                      saveHeroBg(base64String);
+                                      setTempHeroBg(base64String);
                                     };
                                     reader.readAsDataURL(file);
                                   }
@@ -533,21 +545,37 @@ export default function App() {
                               />
                               <label 
                                 htmlFor="hero-upload"
-                                className="flex-1 bg-slate-900 text-white text-center py-2 text-xs font-bold cursor-pointer hover:bg-primary-red transition-colors"
+                                className="bg-slate-900 text-white text-center py-3 text-xs font-bold cursor-pointer hover:bg-slate-800 transition-colors flex items-center justify-center gap-2"
                               >
-                                사진 업로드
+                                <Camera size={14} /> 사진 선택
                               </label>
+                              
                               <button 
                                 onClick={() => {
-                                  const newUrl = prompt('이미지 주소(URL)를 직접 입력하세요:', heroBg);
-                                  if (newUrl) saveHeroBg(newUrl);
+                                  if (tempHeroBg) {
+                                    saveHeroBg(tempHeroBg);
+                                  } else {
+                                    alert('먼저 사진을 선택해주세요.');
+                                  }
                                 }}
-                                className="px-4 border border-slate-900 text-slate-900 text-[10px] font-bold hover:bg-slate-900 hover:text-white transition-colors"
+                                disabled={!tempHeroBg}
+                                className={`py-3 text-xs font-bold transition-all ${tempHeroBg ? 'bg-primary-red text-white' : 'bg-slate-100 text-slate-400 cursor-not-allowed'}`}
                               >
-                                URL 입력
+                                변경사항 저장하기
                               </button>
                             </div>
-                            <p className="text-[9px] text-slate-400 italic">* 고해상도 이미지는 로딩이 느려질 수 있습니다.</p>
+
+                            <button 
+                              onClick={() => {
+                                const newUrl = prompt('이미지 주소(URL)를 직접 입력하세요:', heroBg);
+                                if (newUrl) saveHeroBg(newUrl);
+                              }}
+                              className="w-full py-2 border border-slate-200 text-slate-500 text-[10px] font-bold hover:bg-slate-50 transition-colors uppercase"
+                            >
+                              또는 외부 이미지 URL 입력
+                            </button>
+                            
+                            <p className="text-[9px] text-slate-400 italic">* 이미지를 선택한 후 반드시 '저장하기'를 눌러야 반영됩니다.</p>
                           </div>
                         </div>
                       </div>
