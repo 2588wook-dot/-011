@@ -205,14 +205,14 @@ const Home = ({ heroBg }: { heroBg: string }) => (
         {/* Image Area */}
         <div className="flex-1 flex justify-center md:justify-end items-end order-1 md:order-2 overflow-hidden bg-[#0a1d37] relative">
           <motion.img 
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
             src={heroBg} 
             alt="Candidate Kim Sang-dong" 
             referrerPolicy="no-referrer"
-            className="w-full md:w-auto h-[450px] md:h-[80vh] lg:h-[90vh] object-cover md:object-contain object-bottom pointer-events-none relative z-20"
+            className="w-full max-w-[90vw] md:w-auto h-[400px] sm:h-[500px] md:h-[80vh] lg:h-[90vh] object-contain md:object-contain object-bottom pointer-events-none relative z-20"
           />
         </div>
       </div>
