@@ -170,23 +170,26 @@ const Home = ({ heroBg }: { heroBg: string }) => (
     <header className="bg-[#0a1d37] overflow-hidden border-t-8 border-primary-red">
       <div className="max-w-7xl mx-auto flex flex-col items-center">
         {/* New Top Image Area */}
-        <div className="w-full flex justify-center bg-[#0a1d37] pt-8 md:pt-12 px-4 relative min-h-[300px]">
-          <div className="relative z-20 w-full flex justify-center items-center">
+        <div className="w-full flex justify-center bg-[#0a1d37] pt-6 md:pt-12 px-4 relative">
+          <div className="relative z-20 w-full flex justify-center items-center min-h-[300px] sm:min-h-[400px]">
             <img 
               id="main-candidate-hero"
-              src={heroBg || 'https://artifact.mshcdn.com/posts/abs-327702811/artifact_image_1745583858_328.png'} 
+              key={heroBg}
+              src={heroBg} 
               alt="후보자 김상동" 
               loading="eager"
-              className="w-full max-w-[94%] sm:max-w-lg md:max-w-2xl h-auto max-h-[500px] md:max-h-[70vh] object-contain shadow-2xl rounded-2xl transition-opacity duration-500"
+              decoding="sync"
+              className="w-full max-w-[94%] sm:max-w-lg md:max-w-2xl h-auto max-h-[500px] md:max-h-[70vh] object-contain shadow-2xl rounded-2xl bg-slate-800/30"
               onLoad={(e) => {
                 const target = e.target as HTMLImageElement;
-                target.style.opacity = '1';
-                console.log('Main image rendered:', target.naturalWidth, 'x', target.naturalHeight);
+                console.log('Main image loaded:', target.naturalWidth, 'x', target.naturalHeight);
               }}
               onError={(e) => {
-                console.error('Hero image failed to load');
+                console.error('Hero image failed to load, using default');
                 const target = e.target as HTMLImageElement;
-                target.src = 'https://artifact.mshcdn.com/posts/abs-327702811/artifact_image_1745583858_328.png';
+                if (target.src !== 'https://artifact.mshcdn.com/posts/abs-327702811/artifact_image_1745583858_328.png') {
+                  target.src = 'https://artifact.mshcdn.com/posts/abs-327702811/artifact_image_1745583858_328.png';
+                }
               }}
             />
             {/* Glossy overlay effect for the image */}
