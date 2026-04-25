@@ -427,11 +427,51 @@ export default function App() {
     localStorage.setItem('edu_achievements_ksd', JSON.stringify(updated));
   };
 
-  const saveHeroBg = (url: string) => {
-    setHeroBg(url);
-    localStorage.setItem('edu_hero_bg_ksd', url);
-    setTempHeroBg(null);
-    alert('메인 배경 이미지가 성공적으로 저장되었습니다.');
+  const resizeImage = (base64Str: string, maxWidth = 1200): Promise<string> => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.src = base64Str;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxWidth) {
+          height = (maxWidth / width) * height;
+          width = maxWidth;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, width, height);
+          // Optimize quality to 0.7 to reduce size significantly
+          resolve(canvas.toDataURL('image/jpeg', 0.7));
+        } else {
+          resolve(base64Str);
+        }
+      };
+      img.onerror = () => resolve(base64Str);
+    });
+  };
+
+  const saveHeroBg = async (url: string) => {
+    try {
+      let finalUrl = url;
+      // Only compress if it's a base64 string
+      if (url.startsWith('data:image')) {
+        finalUrl = await resizeImage(url);
+      }
+      
+      setHeroBg(finalUrl);
+      localStorage.setItem('edu_hero_bg_ksd', finalUrl);
+      setTempHeroBg(null);
+      alert('메인 배경 이미지가 성공적으로 저장되었습니다.');
+    } catch (error) {
+      console.error('Failed to save image:', error);
+      alert('이미지 크기가 너무 커서 저장에 실패했습니다. 더 작은 이미지를 사용해주세요.');
+    }
   };
 
   const handleAdminAuth = (e: React.FormEvent) => {
@@ -580,17 +620,36 @@ export default function App() {
                               </button>
                             </div>
 
-                            <button 
-                              onClick={() => {
-                                const newUrl = prompt('이미지 주소(URL)를 직접 입력하세요:', heroBg);
-                                if (newUrl) saveHeroBg(newUrl);
-                              }}
-                              className="w-full py-2 border border-slate-200 text-slate-500 text-[10px] font-bold hover:bg-slate-50 transition-colors uppercase"
-                            >
-                              또는 외부 이미지 URL 입력
-                            </button>
+                            <div className="flex gap-2">
+                              <button 
+                                onClick={() => {
+                                  const newUrl = prompt('이미지 주소(URL)를 직접 입력하세요:', heroBg);
+                                  if (newUrl) saveHeroBg(newUrl);
+                                }}
+                                className="flex-1 py-2 border border-slate-200 text-slate-500 text-[10px] font-bold hover:bg-slate-50 transition-colors uppercase"
+                              >
+                                외부 이미지 URL 입력
+                              </button>
+                              <button 
+                                onClick={() => {
+                                  if (confirm('이미지를 초기 상태로 되돌리시겠습니까?')) {
+                                    const defaultUrl = 'https://artifact.mshcdn.com/posts/abs-327702811/artifact_image_1745583858_328.png';
+                                    setHeroBg(defaultUrl);
+                                    localStorage.removeItem('edu_hero_bg_ksd');
+                                    setTempHeroBg(null);
+                                    alert('이미지가 초기화되었습니다.');
+                                  }
+                                }}
+                                className="px-4 py-2 border border-slate-200 text-slate-400 text-[10px] font-bold hover:bg-red-50 hover:text-red-500 transition-colors uppercase flex items-center gap-1"
+                              >
+                                <Trash2 size={12} /> 초기화
+                              </button>
+                            </div>
                             
-                            <p className="text-[9px] text-slate-400 italic">* 이미지를 선택한 후 반드시 '저장하기'를 눌러야 반영됩니다.</p>
+                            <p className="text-[9px] text-slate-400 italic font-medium">
+                              * 사진 선택 후 '변경사항 저장하기'를 눌러야 저장됩니다. <br/>
+                              * 기기 간(PC-휴대폰) 연동을 위해서는 데이터베이스 설정이 필요합니다.
+                            </p>
                           </div>
                         </div>
                       </div>
