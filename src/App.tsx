@@ -211,6 +211,7 @@ const Home = ({ heroBg }: { heroBg: string }) => (
             transition={{ duration: 0.8 }}
             src={heroBg} 
             alt="Candidate Kim Sang-dong" 
+            referrerPolicy="no-referrer"
             className="w-full md:w-auto h-[450px] md:h-[80vh] lg:h-[90vh] object-cover md:object-contain object-bottom pointer-events-none relative z-20"
           />
         </div>
@@ -509,7 +510,7 @@ export default function App() {
                           <div className="flex flex-col gap-3">
                             {heroBg && (
                               <div className="w-full h-32 bg-slate-200 overflow-hidden border border-slate-200">
-                                <img src={heroBg} alt="Preview" className="w-full h-full object-cover" />
+                                <img src={heroBg} alt="Preview" referrerPolicy="no-referrer" className="w-full h-full object-cover" />
                               </div>
                             )}
                             <div className="flex gap-2">
