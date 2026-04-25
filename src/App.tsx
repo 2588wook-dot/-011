@@ -203,17 +203,23 @@ const Home = ({ heroBg }: { heroBg: string }) => (
         </div>
 
         {/* Image Area */}
-        <div className="flex-1 flex justify-center md:justify-end items-end order-1 md:order-2 overflow-hidden bg-[#0a1d37] relative min-h-[350px] md:min-h-0">
+        <div className="flex-1 flex justify-center md:justify-end items-end order-1 md:order-2 overflow-hidden bg-[#0a1d37] relative min-h-[40vh] md:min-h-0">
           <motion.img 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1 }}
+            transition={{ duration: 0.5 }}
             src={heroBg} 
             alt="후보자 김상동" 
             referrerPolicy="no-referrer"
-            className="w-full max-w-full md:w-auto h-[350px] sm:h-[450px] md:h-[85vh] lg:h-[90vh] object-contain md:object-contain object-bottom pointer-events-none relative z-20"
+            loading="eager"
+            className="w-full max-w-full md:w-auto h-[400px] sm:h-[500px] md:h-[85vh] lg:h-[90vh] object-contain object-bottom relative z-20"
+            onLoad={() => console.log('Hero image loaded')}
+            onError={() => {
+              console.error('Failed to load hero image, reverting to default');
+              setHeroBg('https://artifact.mshcdn.com/posts/abs-327702811/artifact_image_1745583858_328.png');
+            }}
           />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0a1d37]/40 to-transparent z-10 md:hidden" />
         </div>
       </div>
     </header>
