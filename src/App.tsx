@@ -170,21 +170,24 @@ const Home = ({ heroBg }: { heroBg: string }) => (
     <header className="bg-[#0a1d37] overflow-hidden border-t-8 border-primary-red">
       <div className="max-w-7xl mx-auto flex flex-col items-center">
         {/* New Top Image Area */}
-        <div className="w-full flex justify-center bg-[#0a1d37] pt-8 md:pt-12 px-4 relative">
+        <div className="w-full flex justify-center bg-[#0a1d37] pt-8 md:pt-12 px-4 relative min-h-[300px] sm:min-h-[400px] md:min-h-0">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
-            className="relative z-20 w-full flex justify-center"
+            className="relative z-20 w-full flex justify-center items-center"
           >
             <img 
               src={heroBg} 
               alt="후보자 김상동" 
               referrerPolicy="no-referrer"
               loading="eager"
-              className="w-full max-w-lg md:max-w-2xl h-auto max-h-[400px] md:max-h-[600px] object-contain shadow-2xl rounded-2xl"
-              onError={() => {
+              className="w-full max-w-[90%] sm:max-w-lg md:max-w-2xl h-auto max-h-[450px] md:max-h-[650px] object-contain shadow-2xl rounded-2xl bg-[#0a1d37]/50"
+              onLoad={() => console.log('Hero image loaded on mobile')}
+              onError={(e) => {
                 console.error('Failed to load hero image');
+                const target = e.target as HTMLImageElement;
+                target.src = 'https://artifact.mshcdn.com/posts/abs-327702811/artifact_image_1745583858_328.png';
               }}
             />
             {/* Glossy overlay effect for the image */}
