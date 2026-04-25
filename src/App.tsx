@@ -170,31 +170,30 @@ const Home = ({ heroBg }: { heroBg: string }) => (
     <header className="bg-[#0a1d37] overflow-hidden border-t-8 border-primary-red">
       <div className="max-w-7xl mx-auto flex flex-col items-center">
         {/* New Top Image Area */}
-        <div className="w-full flex justify-center bg-[#0a1d37] pt-8 md:pt-12 px-4 relative min-h-[300px] sm:min-h-[400px] md:min-h-0">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
-            className="relative z-20 w-full flex justify-center items-center"
-          >
+        <div className="w-full flex justify-center bg-[#0a1d37] pt-8 md:pt-12 px-4 relative min-h-[300px]">
+          <div className="relative z-20 w-full flex justify-center items-center">
             <img 
-              src={heroBg} 
+              id="main-candidate-hero"
+              src={heroBg || 'https://artifact.mshcdn.com/posts/abs-327702811/artifact_image_1745583858_328.png'} 
               alt="후보자 김상동" 
-              referrerPolicy="no-referrer"
               loading="eager"
-              className="w-full max-w-[90%] sm:max-w-lg md:max-w-2xl h-auto max-h-[450px] md:max-h-[650px] object-contain shadow-2xl rounded-2xl bg-[#0a1d37]/50"
-              onLoad={() => console.log('Hero image loaded on mobile')}
+              className="w-full max-w-[94%] sm:max-w-lg md:max-w-2xl h-auto max-h-[500px] md:max-h-[70vh] object-contain shadow-2xl rounded-2xl transition-opacity duration-500"
+              onLoad={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.style.opacity = '1';
+                console.log('Main image rendered:', target.naturalWidth, 'x', target.naturalHeight);
+              }}
               onError={(e) => {
-                console.error('Failed to load hero image');
+                console.error('Hero image failed to load');
                 const target = e.target as HTMLImageElement;
                 target.src = 'https://artifact.mshcdn.com/posts/abs-327702811/artifact_image_1745583858_328.png';
               }}
             />
             {/* Glossy overlay effect for the image */}
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-white/10 to-transparent pointer-events-none" />
-          </motion.div>
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-white/5 to-transparent pointer-events-none" />
+          </div>
           {/* Background flourish */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-full bg-primary-red/10 blur-[120px] rounded-full pointer-events-none" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-full bg-primary-red/5 blur-[100px] rounded-full pointer-events-none" />
         </div>
 
         {/* Text Area Below Image */}
@@ -409,16 +408,21 @@ export default function App() {
   const [newAchievement, setNewAchievement] = useState<Partial<Achievement>>({});
 
   useEffect(() => {
-    const savedAchievements = localStorage.getItem('edu_achievements_ksd');
-    if (savedAchievements) {
-      setAchievements(JSON.parse(savedAchievements));
-    } else {
-      setAchievements(INITIAL_ACHIEVEMENTS);
-    }
+    try {
+      const savedAchievements = localStorage.getItem('edu_achievements_ksd');
+      if (savedAchievements) {
+        setAchievements(JSON.parse(savedAchievements));
+      } else {
+        setAchievements(INITIAL_ACHIEVEMENTS);
+      }
 
-    const savedBg = localStorage.getItem('edu_hero_bg_ksd');
-    if (savedBg) {
-      setHeroBg(savedBg);
+      const savedBg = localStorage.getItem('edu_hero_bg_ksd');
+      // Minimal sanity check: base64 images are always long
+      if (savedBg && savedBg.length > 50) {
+        setHeroBg(savedBg);
+      }
+    } catch (e) {
+      console.error("Initialization error:", e);
     }
   }, []);
 
